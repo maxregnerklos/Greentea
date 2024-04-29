@@ -7,7 +7,7 @@ Almost every change is built and tested. Thus, it makes it possible to have an e
 
 #### When does the build take place?
 
-* When a developer makes changes to the GreenteaOS/Kernel repository
+* When a developer makes changes to the GreenteaOS/Tofita repository
 * When the contributor sends a request to merge changes (Pull Request)
 * When the contributor makes commits to his pull request
 

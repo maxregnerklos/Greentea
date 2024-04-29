@@ -94,7 +94,7 @@ Some releases may be provided in the [Greentea LOAD](https://t.me/greenteaos_off
 
 Visit out [Issues](https://github.com/GreenteaOS/Greentea/issues) section to dive into development process! You are free to read and share anything important (well, actually bugs), but talking in chat rooms is in prefer.
 
-## Kernel
+## Internals
 
 System's source code is hosted inside [Tofita](https://github.com/GreenteaOS/Tofita) repository. Feel free to make pull requests!
 

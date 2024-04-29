@@ -17,12 +17,12 @@ Nope. Greentea is funded solely by [donations](https://greenteaos.github.io/dona
 
 #### Is Greentea OS a GNU/Linux distro?
 
-No. It is an independent OS, without Linux kernel.
+No. It is an independent OS, and isn't based on top of Linux.
 
 #### What makes Greentea OS so unique?
 
 ***From developer perspective:*** safety-first OS, aimed at strict isolation and code verification.
-To achieve those goals, we created new kernel for it — Tofita, and programming language - Hexa.
+To achieve those goals, we created new engine for it — Tofita, and programming language - Hexa.
 
 ***From user perspective:*** apps cannot break the system or make it slow. System updates are fast and not annoying.
 
@@ -35,7 +35,7 @@ Visit [our Telegram news channel](https://t.me/s/greenteaos_news) and check [com
 
 #### What is Tofita?
 
-[Tofita](https://github.com/GreenteaOS/Tofita) is *the* Greentea OS kernel, the core, the heart of the system.
+[Tofita](https://github.com/GreenteaOS/Tofita) is *the* Greentea OS engine, the core, the heart of the system.
 
 #### Where I may download it?
 
