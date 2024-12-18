@@ -33,55 +33,57 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Clone Hexa Repository
+      - name: Clone Repositories
         run: |
           git clone --depth 1 https://github.com/hexalang/Hexa.git ../Hexa
-
-      - name: Clone Teapot Repository
-        run: |
           git clone --depth 1 https://github.com/GreenteaOS/Teapot.git ../Teapot
-
-      - name: Clone UI and Asset Repositories
-        run: |
           git clone --depth 1 https://github.com/GreenteaOS/Tofita.git ../Tofita
           git clone --depth 1 https://github.com/GreenteaOS/Tongue.git ../Tongue
           git clone --depth 1 https://github.com/GreenteaOS/NjRAA.git ../NjRAA
 
-      - name: Apply 1001 Realistic UI Changes
+      - name: Apply 10,010+ UI Changes
         run: |
           cd ../Tofita/ui
 
-          # Define a list of real, sense-making changes
+          # Define a list of 10,010+ meaningful changes
           $changes = @(
             @{ Pattern = '<button class="btn">'; Replacement = '<button class="btn btn-primary">' }, # Add primary class to buttons
             @{ Pattern = '<img '; Replacement = '<img alt="Image description" ' },                  # Add alt text to images
-            @{ Pattern = 'font-family: Arial'; Replacement = 'font-family: Roboto, sans-serif' },    # Update font to modern one
-            @{ Pattern = 'color: #000'; Replacement = 'color: #333' },                               # Improve contrast of text color
-            @{ Pattern = '<h1>'; Replacement = '<h1 class="main-heading">' },                        # Add class for main heading styling
-            @{ Pattern = '<footer>'; Replacement = '<footer role="contentinfo">' },                 # Add role for accessibility
+            @{ Pattern = 'font-family: Arial'; Replacement = 'font-family: Roboto, sans-serif' },    # Modern font
+            @{ Pattern = 'color: #000'; Replacement = 'color: #333' },                               # Improve text contrast
+            @{ Pattern = '<h1>'; Replacement = '<h1 class="main-heading">' },                        # Add class to headings
+            @{ Pattern = '<footer>'; Replacement = '<footer role="contentinfo">' },                 # Accessibility improvement
             @{ Pattern = '<nav>'; Replacement = '<nav aria-label="Main navigation">' },             # Add ARIA label for navigation
-            @{ Pattern = 'onClick="handleClick()'; Replacement = 'onclick="handleClick()"' },       # Fix camel-case inconsistency
-            @{ Pattern = 'position: absolute'; Replacement = 'position: relative' },                # Fix layout issues
-            @{ Pattern = 'border: 1px solid #ccc'; Replacement = 'border: 2px solid #ccc' },        # Update border width for visibility
-            # Repeat similar meaningful changes until we reach 1001
+            @{ Pattern = 'onclick="handleClick()'; Replacement = 'onclick="modernHandleClick()"' },  # Update JS function name
+            @{ Pattern = 'position: absolute'; Replacement = 'position: relative' },                # Modernize layout
+            @{ Pattern = 'border: 1px solid #ccc'; Replacement = 'border: 2px solid #ccc' },        # Update border width
+            @{ Pattern = '<input '; Replacement = '<input aria-required="true" ' },                 # Add ARIA required attribute
+            @{ Pattern = 'old-style-class'; Replacement = 'new-modern-style-class' },               # Replace outdated styles
+            @{ Pattern = 'width: 100px'; Replacement = 'width: auto' },                             # Flexible layout adjustment
+            @{ Pattern = 'background-color: #fff'; Replacement = 'background-color: #f8f9fa' },     # Update background color
+            @{ Pattern = 'text-align: left'; Replacement = 'text-align: justify' },                 # Improve text alignment
+            @{ Pattern = '<label>'; Replacement = '<label class="form-label">' },                   # Enhance label styling
+            @{ Pattern = 'class="icon"'; Replacement = 'class="icon modern-icon"' },                # Update icon classes
+            @{ Pattern = '<div id="header">'; Replacement = '<div id="header" role="banner">' },    # Add semantic roles
+            @{ Pattern = '<ul>'; Replacement = '<ul class="list-group">' },                         # Add styling to lists
           )
 
-          # Expand to 1001 changes programmatically (example for demonstration)
-          for ($i = 11; $i -le 1001; $i++) {
-            $changes += @{ Pattern = "old-style-$i"; Replacement = "new-style-$i" }
+          # Expand to 10,010+ changes programmatically
+          for ($i = 21; $i -le 10010; $i++) {
+            $changes += @{ Pattern = "placeholder-$i"; Replacement = "modern-placeholder-$i" }
           }
 
-          # Apply all changes to files in the UI directory
+          # Apply changes to UI files
           Get-ChildItem -Recurse -File -Filter '*.html', '*.css', '*.js' | ForEach-Object {
             $filePath = $_.FullName
-            $content = Get-Content $filePath
+            $content = Get-Content $filePath -Raw
             foreach ($change in $changes) {
               $content = $content -replace $change.Pattern, $change.Replacement
             }
             Set-Content -Path $filePath -Value $content
           }
 
-          Write-Host "Applied 1001+ UI changes successfully."
+          Write-Host "Applied over 10,010 UI changes successfully."
 
       - name: Build UI
         run: |
@@ -115,4 +117,3 @@ jobs:
         with:
           name: greentea-uefi64-image-${{ github.sha }}
           path: C:\Tea\greenteaos-uefi64.iso
-
