@@ -43,7 +43,7 @@ jobs:
 
       - name: Analyze and Modernize UI
         run: |
-          cd ../Tofita/ui
+          cd ../Tofita/Greentea/Assets
 
           # Detect and intelligently create changes
           $changes = @()
@@ -86,7 +86,7 @@ jobs:
 
       - name: Build UI
         run: |
-          cd ../Tofita/ui
+          cd ../Tofita/Greentea/Assets
 
           # Check for a build script
           if (Test-Path "build.bat") {
