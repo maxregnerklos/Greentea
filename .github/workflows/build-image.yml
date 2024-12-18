@@ -40,78 +40,65 @@ jobs:
           git clone --depth 1 https://github.com/GreenteaOS/Tongue.git ../Tongue
           git clone --depth 1 https://github.com/GreenteaOS/NjRAA.git ../NjRAA
 
-      - name: Analyze and Modernize UI
+      - name: Modernize UI
         run: |
-          cd ./Greentea/Assets
+          # Navigate to the Assets directory
+          cd ./Assets
 
-          # Detect and intelligently create changes
-          $changes = @()
+          # Define intelligent changes
+          $changes = @(
+            @{ Pattern = '<button class="btn">'; Replacement = '<button class="btn btn-primary">' }, # Add primary class to buttons
+            @{ Pattern = '<img '; Replacement = '<img alt="Image description" ' },                  # Add alt attributes to images
+            @{ Pattern = 'font-family: Arial'; Replacement = 'font-family: Roboto, sans-serif' },    # Modern font family
+            @{ Pattern = 'color: #000'; Replacement = 'color: #333' },                               # Better contrast
+            @{ Pattern = '<h1>'; Replacement = '<h1 class="main-heading">' },                        # Add class to headings
+            @{ Pattern = '<footer>'; Replacement = '<footer role="contentinfo">' },                 # Accessibility roles
+            @{ Pattern = '<nav>'; Replacement = '<nav aria-label="Main navigation">' },             # Add ARIA labels
+            @{ Pattern = 'onclick="handleClick()'; Replacement = 'onclick="modernHandleClick()"' },  # Update JS function name
+            @{ Pattern = 'position: absolute'; Replacement = 'position: relative' },                # Modernize layout
+            @{ Pattern = 'border: 1px solid #ccc'; Replacement = 'border: 2px solid #ccc' },        # Adjust border styles
+          )
 
-          # Intelligent Detection Logic
+          # Apply changes to all relevant files in the Assets directory
           Get-ChildItem -Recurse -File -Filter '*.html', '*.css', '*.js' | ForEach-Object {
             $filePath = $_.FullName
             $content = Get-Content $filePath -Raw
 
-            # Detect patterns to modernize
-            if ($content -match '<button class="btn">') {
-              $changes += @{ FilePath = $filePath; Pattern = '<button class="btn">'; Replacement = '<button class="btn btn-primary">' }
+            # Apply each change
+            foreach ($change in $changes) {
+              $content = $content -replace $change.Pattern, $change.Replacement
             }
-            if ($content -match '<img ') {
-              $changes += @{ FilePath = $filePath; Pattern = '<img '; Replacement = '<img alt="Image description" ' }
-            }
-            if ($content -match 'font-family: Arial') {
-              $changes += @{ FilePath = $filePath; Pattern = 'font-family: Arial'; Replacement = 'font-family: Roboto, sans-serif' }
-            }
-            if ($content -match 'color: #000') {
-              $changes += @{ FilePath = $filePath; Pattern = 'color: #000'; Replacement = 'color: #333' }
-            }
-            # Add more detection logic as needed for project modernization
+
+            # Save updated content back to the file
+            Set-Content -Path $filePath -Value $content
+            Write-Host "Modernized file: $filePath"
           }
 
-          # Apply detected changes
-          foreach ($change in $changes) {
-            $filePath = $change.FilePath
-            $pattern = $change.Pattern
-            $replacement = $change.Replacement
-
-            $fileContent = Get-Content $filePath -Raw
-            $fileContent = $fileContent -replace $pattern, $replacement
-            Set-Content -Path $filePath -Value $fileContent
-
-            Write-Host "Applied change: [$pattern -> $replacement] in file [$filePath]"
-          }
-
-          Write-Host "Modernization complete with ${($changes.Count)} changes applied."
+          Write-Host "UI modernization complete."
 
       - name: Build UI
         run: |
-          cd ./Greentea/Assets
+          # Navigate to Assets directory and check for a build script
+          cd ./Assets
 
-          # Check for a build script
           if (Test-Path "build.bat") {
+            Write-Host "Found build script. Running..."
             cmd.exe /c 'build.bat'
           } else {
-            Write-Host "No build script found. Performing default build logic."
+            Write-Host "No build script found. Performing default build."
             mkdir ../dist
             Copy-Item -Path * -Destination ../dist -Recurse
           }
 
-          Write-Host "UI build complete."
+          Write-Host "UI build process complete."
 
       - name: Prepare Hexa
         run: |
           ../Teapot/node-v18.1.0-win-x64/node --trace-uncaught ../Hexa/bootstrap.js ../Hexa/hexa.json
           ../Teapot/node-v18.1.0-win-x64/node --trace-uncaught ../Hexa/hexa-node.js ../Hexa/hexa.json
 
-      - name: Build Tofita
-        run: |
-          cd ./Greentea
-          $env:Path += ";.\..\Hexa"
-          $ErrorActionPreference = 'SilentlyContinue'
-          cmd.exe /c 'build.bat'
-
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: greentea-uefi64-image-${{ github.sha }}
-          path: C:\Tea\greenteaos-uefi64.iso
+          name: greentea-assets-build-${{ github.sha }}
+          path: ./Assets
