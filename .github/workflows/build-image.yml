@@ -56,7 +56,7 @@ jobs:
             @{ Pattern = '<nav>'; Replacement = '<nav aria-label="Main navigation">' },             # Add ARIA labels
             @{ Pattern = 'onclick="handleClick()'; Replacement = 'onclick="modernHandleClick()"' },  # Update JS function name
             @{ Pattern = 'position: absolute'; Replacement = 'position: relative' },                # Modernize layout
-            @{ Pattern = 'border: 1px solid #ccc'; Replacement = 'border: 2px solid #ccc' },        # Adjust border styles
+            @{ Pattern = 'border: 1px solid #ccc'; Replacement = 'border: 2px solid #ccc' }         # Adjust border styles
           )
 
           # Apply changes to all relevant files in the Assets directory
