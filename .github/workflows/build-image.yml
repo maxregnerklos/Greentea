@@ -37,13 +37,12 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/hexalang/Hexa.git ../Hexa
           git clone --depth 1 https://github.com/GreenteaOS/Teapot.git ../Teapot
-          git clone --depth 1 https://github.com/GreenteaOS/Tofita.git ../Tofita
           git clone --depth 1 https://github.com/GreenteaOS/Tongue.git ../Tongue
           git clone --depth 1 https://github.com/GreenteaOS/NjRAA.git ../NjRAA
 
       - name: Analyze and Modernize UI
         run: |
-          cd Greentea/Assets
+          cd ./Greentea/Assets
 
           # Detect and intelligently create changes
           $changes = @()
@@ -86,7 +85,7 @@ jobs:
 
       - name: Build UI
         run: |
-          cd ../Tofita/Greentea/Assets
+          cd ./Greentea/Assets
 
           # Check for a build script
           if (Test-Path "build.bat") {
@@ -106,7 +105,7 @@ jobs:
 
       - name: Build Tofita
         run: |
-          cd ../Tofita
+          cd ./Greentea
           $env:Path += ";.\..\Hexa"
           $ErrorActionPreference = 'SilentlyContinue'
           cmd.exe /c 'build.bat'
