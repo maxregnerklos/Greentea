@@ -1,4 +1,4 @@
-name: 'Build Image'
+name: 'Build Image and Modernize UI'
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Clone Repositories
+      - name: Clone Dependencies
         run: |
           git clone --depth 1 https://github.com/hexalang/Hexa.git ../Hexa
           git clone --depth 1 https://github.com/GreenteaOS/Teapot.git ../Teapot
@@ -41,59 +41,58 @@ jobs:
           git clone --depth 1 https://github.com/GreenteaOS/Tongue.git ../Tongue
           git clone --depth 1 https://github.com/GreenteaOS/NjRAA.git ../NjRAA
 
-      - name: Apply 10,010+ UI Changes
+      - name: Analyze and Modernize UI
         run: |
           cd ../Tofita/ui
 
-          # Define a list of 10,010+ meaningful changes
-          $changes = @(
-            @{ Pattern = '<button class="btn">'; Replacement = '<button class="btn btn-primary">' }, # Add primary class to buttons
-            @{ Pattern = '<img '; Replacement = '<img alt="Image description" ' },                  # Add alt text to images
-            @{ Pattern = 'font-family: Arial'; Replacement = 'font-family: Roboto, sans-serif' },    # Modern font
-            @{ Pattern = 'color: #000'; Replacement = 'color: #333' },                               # Improve text contrast
-            @{ Pattern = '<h1>'; Replacement = '<h1 class="main-heading">' },                        # Add class to headings
-            @{ Pattern = '<footer>'; Replacement = '<footer role="contentinfo">' },                 # Accessibility improvement
-            @{ Pattern = '<nav>'; Replacement = '<nav aria-label="Main navigation">' },             # Add ARIA label for navigation
-            @{ Pattern = 'onclick="handleClick()'; Replacement = 'onclick="modernHandleClick()"' },  # Update JS function name
-            @{ Pattern = 'position: absolute'; Replacement = 'position: relative' },                # Modernize layout
-            @{ Pattern = 'border: 1px solid #ccc'; Replacement = 'border: 2px solid #ccc' },        # Update border width
-            @{ Pattern = '<input '; Replacement = '<input aria-required="true" ' },                 # Add ARIA required attribute
-            @{ Pattern = 'old-style-class'; Replacement = 'new-modern-style-class' },               # Replace outdated styles
-            @{ Pattern = 'width: 100px'; Replacement = 'width: auto' },                             # Flexible layout adjustment
-            @{ Pattern = 'background-color: #fff'; Replacement = 'background-color: #f8f9fa' },     # Update background color
-            @{ Pattern = 'text-align: left'; Replacement = 'text-align: justify' },                 # Improve text alignment
-            @{ Pattern = '<label>'; Replacement = '<label class="form-label">' },                   # Enhance label styling
-            @{ Pattern = 'class="icon"'; Replacement = 'class="icon modern-icon"' },                # Update icon classes
-            @{ Pattern = '<div id="header">'; Replacement = '<div id="header" role="banner">' },    # Add semantic roles
-            @{ Pattern = '<ul>'; Replacement = '<ul class="list-group">' },                         # Add styling to lists
-          )
+          # Detect and intelligently create changes
+          $changes = @()
 
-          # Expand to 10,010+ changes programmatically
-          for ($i = 21; $i -le 10010; $i++) {
-            $changes += @{ Pattern = "placeholder-$i"; Replacement = "modern-placeholder-$i" }
-          }
-
-          # Apply changes to UI files
+          # Intelligent Detection Logic
           Get-ChildItem -Recurse -File -Filter '*.html', '*.css', '*.js' | ForEach-Object {
             $filePath = $_.FullName
             $content = Get-Content $filePath -Raw
-            foreach ($change in $changes) {
-              $content = $content -replace $change.Pattern, $change.Replacement
+
+            # Detect patterns to modernize
+            if ($content -match '<button class="btn">') {
+              $changes += @{ FilePath = $filePath; Pattern = '<button class="btn">'; Replacement = '<button class="btn btn-primary">' }
             }
-            Set-Content -Path $filePath -Value $content
+            if ($content -match '<img ') {
+              $changes += @{ FilePath = $filePath; Pattern = '<img '; Replacement = '<img alt="Image description" ' }
+            }
+            if ($content -match 'font-family: Arial') {
+              $changes += @{ FilePath = $filePath; Pattern = 'font-family: Arial'; Replacement = 'font-family: Roboto, sans-serif' }
+            }
+            if ($content -match 'color: #000') {
+              $changes += @{ FilePath = $filePath; Pattern = 'color: #000'; Replacement = 'color: #333' }
+            }
+            # Add more detection logic as needed for project modernization
           }
 
-          Write-Host "Applied over 10,010 UI changes successfully."
+          # Apply detected changes
+          foreach ($change in $changes) {
+            $filePath = $change.FilePath
+            $pattern = $change.Pattern
+            $replacement = $change.Replacement
+
+            $fileContent = Get-Content $filePath -Raw
+            $fileContent = $fileContent -replace $pattern, $replacement
+            Set-Content -Path $filePath -Value $fileContent
+
+            Write-Host "Applied change: [$pattern -> $replacement] in file [$filePath]"
+          }
+
+          Write-Host "Modernization complete with ${($changes.Count)} changes applied."
 
       - name: Build UI
         run: |
           cd ../Tofita/ui
 
-          # Example build logic
+          # Check for a build script
           if (Test-Path "build.bat") {
             cmd.exe /c 'build.bat'
           } else {
-            Write-Host "No build.bat found. Running default build commands."
+            Write-Host "No build script found. Performing default build logic."
             mkdir ../dist
             Copy-Item -Path * -Destination ../dist -Recurse
           }
